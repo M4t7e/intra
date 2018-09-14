@@ -172,9 +172,9 @@ public class HistoryGraph extends View implements DnsActivityReader {
       // Nothing we can do about it.
       height = MeasureSpec.getSize(h);
     } else {
-      // Make the aspect ratio 1:1, but limit the height to fit on screen with some room to spare.
+      // Fill 80% of the height.
       int screenHeight = getResources().getDisplayMetrics().heightPixels;
-      height = Math.min(width, (int)(0.8 * screenHeight));
+      height = (int)(0.8 * screenHeight);
       if (hMode == MeasureSpec.AT_MOST) {
         height = Math.min(height, MeasureSpec.getSize(h));
       }
@@ -194,7 +194,8 @@ public class HistoryGraph extends View implements DnsActivityReader {
     float xoffset = (float) (getWidth()) * RIGHT_MARGIN_FRACTION;
     float usableWidth = getWidth() - xoffset;
     float yoffset = getHeight() * BOTTOM_MARGIN_FRACTION;
-    float usableHeight = getHeight() - (DATA_STROKE_WIDTH + yoffset);
+    // Make graph fit in the available height and never be taller than the width.
+    float usableHeight = Math.min(getWidth(), getHeight() - (DATA_STROKE_WIDTH + yoffset));
 
     now = SystemClock.elapsedRealtime();
     float rightEndY;
